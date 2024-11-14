@@ -1,0 +1,37 @@
+/// <reference types="Cypress" />
+
+describe('login into the website', () => {
+    it('login before checkout', () => {
+        cy.visit('https://automationexercise.com/');
+        cy.get('.logo').should('be.visible')
+        cy.get('.nav.navbar-nav').should('be.visible')
+        cy.get('a').contains('Signup / Login').click()
+        cy.get('.login-form > h2').should('be.visible').should('contain', 'Login to your account')
+        cy.fixture('userData.json').as('userData')
+        cy.get('@userData').then((user) => {
+            cy.get('[data-qa="login-email"]').type(user.email)
+            cy.get('[data-qa="login-password"]').type(user.password)
+            cy.get('[data-qa="login-button"]').click()
+            cy.contains('Logged in as').should('be.visible')
+            cy.get('.single-products').first().trigger('mouseover')
+            cy.get('a.btn.btn-default.add-to-cart').first().should('be.visible').click()
+            cy.get('button.btn.btn-success.close-modal.btn-block').click()
+            cy.get('a').contains('Cart').click({force: true})
+            cy.get('.active').should('be.visible').contains('Shopping Cart')
+            cy.get('a').contains('Proceed To Checkout').click()
+            cy.get('#address_delivery > .address_firstname').should('have.text', 'Mr. Jhon Smith')
+            cy.get('#address_delivery > :nth-child(4)').should('have.text', 'Moscow, Moscow-Plaza, 10')
+            cy.get('#address_invoice > .address_firstname').should('have.text', 'Mr. Jhon Smith')
+            cy.get('#address_invoice > .address_city').should('contain', '1234567')
+            cy.get('.form-control').type('Test payment')
+            cy.get('a').contains('Place Order').click()
+            cy.get('[data-qa="name-on-card"]').type('Jhon Smith')
+            cy.get('[data-qa="card-number"]').type('2345-5555-5555-1111')
+            cy.get('[data-qa="cvc"]').type('000')
+            cy.get('[data-qa="expiry-month"]').type('25')
+            cy.get('[data-qa="expiry-year"]').type('1888')
+            cy.get('[data-qa="pay-button"]').click()
+            cy.get('.col-sm-9 > p').should('be.visible').should('have.text', 'Congratulations! Your order has been confirmed!')
+            })     
+    })
+})
