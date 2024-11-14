@@ -1,52 +1,26 @@
-const fs = require('fs');
-const path = require('path');
-const https = require('https'); 
-const http = require('http');  
+const mochawesomeMerge = require('mochawesome-merge');  // Импортируем правильно
+const mochawesomeReportGenerator = require('mochawesome-report-generator');
+const { defineConfig } = require('cypress');
 
-module.exports = {
-  reporter: 'cypress-mochawesome-reporter',
-  reporterOptions: {
-    "reportDir": "cypress/results",
-    "overwrite": true,
-    "html": true,
-    "reportFilename": "cypress-report"
-  },
+module.exports = defineConfig({
   e2e: {
-    specPattern: 'cypress/e2e/**/*.cy.js',  
-    // supportFile: 'cypress/support/index.js',  
-    FixturesFolder: 'cypress/fixtures',  
-    screenshotsFolder: 'cypress/screenshots', 
-    // videosFolder: 'cypress/videos', 
-    // video: true, 
-    screenshotOnRunFailure: true,  
-    trashAssetsBeforeRuns: true,  
-    viewportWidth: 1280, 
-    viewportHeight: 720,  
     setupNodeEvents(on, config) {
-      require('cypress-mochawesome-reporter/plugin')(on);
-      // Регистрируем задачу для скачивания файла
       on('task', {
         downloadFile({ url, downloadFolder, fileName }) {
           const filePath = path.join(downloadFolder, fileName);
-          
-          // Возвращаем новый промис
           return new Promise((resolve, reject) => {
             // Выбираем https или http в зависимости от URL
             const client = url.startsWith('https') ? https : http;
-            
             // Создаем поток для записи файла
             const file = fs.createWriteStream(filePath);
-
             // Скачиваем файл
             client.get(url, (response) => {
               if (response.statusCode !== 200) {
                 // Если статус не 200, отклоняем промис
                 return reject(`Failed to download file. Status code: ${response.statusCode}`);
               }
-
               // Пайпим данные в файл
               response.pipe(file);
-
               // Когда файл завершит скачивание
               file.on('finish', () => {
                 file.close(() => resolve(filePath)); // Завершаем скачивание, возвращаем путь к файлу
@@ -59,6 +33,37 @@ module.exports = {
           });
         }
       });
-    }
-  }
-};
+      // Инициализация плагина cypress-mochawesome-reporter
+      require('cypress-mochawesome-reporter/plugin')(on);
+
+      // Слияние отчетов после завершения тестов
+      on('after:run', async () => {  // Используем async/await для асинхронной функции
+        try {
+          // Мержим все отчеты в один
+          const mergedJson = await mochawesomeMerge.merge({ files: ['cypress/results/.jsons/*.json'] });
+
+          // Генерируем финальный HTML отчет
+          mochawesomeReportGenerator.create(mergedJson, {
+            reportDir: 'cypress/results',
+            reportFilename: 'final-report.html',
+          });
+        } catch (error) {
+          console.error('Ошибка при слиянии отчетов:', error);
+        }
+      });
+
+      return config;
+    },// Убедитесь, что это ваш правильный URL
+  },
+  reporter: 'cypress-mochawesome-reporter',  // Используем репортер mochawesome
+  reporterOptions: {
+    reportDir: 'cypress/results',          // Папка для сохранения отчетов
+    overwrite: true,                       // Перезаписывать отчеты
+    html: true,                            // Генерация HTML отчетов
+    json: false,                           // Не генерировать JSON файлы
+    timestamp: 'yyyy-mm-dd HH:MM:ss',      // Формат для timestamp в именах файлов
+  },
+});
+
+
+

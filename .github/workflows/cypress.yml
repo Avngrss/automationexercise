@@ -1,0 +1,42 @@
+name: CI/CD Pipeline (macOS)
+
+on:
+  push:
+    branches:
+      - master  # или другой основной branch
+  pull_request:
+    branches:
+      - master  # или другой основной branch
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run Cypress tests
+      - name: Run Cypress tests
+        run: |
+          npx cypress run
+        env:
+          CI: true
+
+      # Step 5: Upload Cypress test results as an artifact (optional)
+      - name: Upload Cypress test results as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-results
+          path: cypress/results/
