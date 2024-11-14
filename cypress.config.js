@@ -2,6 +2,11 @@ const mochawesomeMerge = require('mochawesome-merge');  // Импортируе�
 const mochawesomeReportGenerator = require('mochawesome-report-generator');
 const { defineConfig } = require('cypress');
 
+const fs = require('fs');
+const path = require('path');  // Это нужно для работы с путями
+const https = require('https');
+const http = require('http');
+
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
