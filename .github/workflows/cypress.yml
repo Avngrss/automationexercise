@@ -32,32 +32,25 @@ jobs:
 
       # Step 4: Run Cypress tests and generate report
       - name: Run Cypress tests and generate report
-        run: |
-          npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/results
-        env:
-          CI: true
+        run: npm run test-and-generate-report
 
-      # Step 5: Merge reports and generate final HTML
-      - name: Generate final report
-        run: npm run generate-report
-
-      # Step 6: Upload Cypress test results as artifact (optional)
+      # Step 5: Upload Cypress test results as artifact (optional)
       - name: Upload Cypress test results as artifact
         uses: actions/upload-artifact@v3
         with:
           name: cypress-results
           path: cypress/results/
 
-      # Step 7: Deploy to GitHub Pages
+      # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: cypress/results  # Убедитесь, что это правильная папка
+          folder: cypress/results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 8: Send email with Cypress report and link to deployed page
+      # Step 7: Send email with Cypress report and link to deployed page
       - name: Send email with Cypress report
         uses: dawidd6/action-send-mail@v3
         with:
