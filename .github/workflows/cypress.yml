@@ -46,7 +46,7 @@ jobs:
           ls -l cypress/results/
           cat cypress/results/final-report.html
 
-        name: Archive Mochawesome report and assets
+      - name: Archive Mochawesome report and assets
         run: |
           tar -czf mochawesome-report.tar.gz cypress/results/final-report.html cypress/results/assets/
 
