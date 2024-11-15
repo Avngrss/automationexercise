@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cypress run",
-    "open": "cypress open"
+    "open": "cypress open",
+    "generate-report": "mochawesome-merge cypress/results/*.json > cypress/results/all-tests.json && mochawesome-report-generator cypress/results/all-tests.json --reportDir cypress/results --reportFilename final-report.html"
   },
   "keywords": [],
   "author": "",

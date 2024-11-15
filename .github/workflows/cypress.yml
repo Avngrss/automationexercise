@@ -1,13 +1,15 @@
 name: CI/CD Pipeline (macOS)
+
 permissions:
-  contents: write 
+  contents: write
+
 on:
   push:
     branches:
-      - master  # или другой основной branch
+      - master
   pull_request:
     branches:
-      - master  # или другой основной branch
+      - master
 
 jobs:
   test:
@@ -35,23 +37,27 @@ jobs:
         env:
           CI: true
 
-      # Step 5: Upload Cypress test results as artifact (optional)
+      # Step 5: Merge reports and generate final HTML
+      - name: Generate final report
+        run: npm run generate-report
+
+      # Step 6: Upload Cypress test results as artifact (optional)
       - name: Upload Cypress test results as artifact
         uses: actions/upload-artifact@v3
         with:
           name: cypress-results
           path: cypress/results/
 
-      # Step 6: Deploy to GitHub Pages
+      # Step 7: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages  # Можно выбрать ветку для публикации, например gh-pages
-          folder: cypress/results  # Папка с результатами тестов
+          branch: gh-pages
+          folder: cypress/results  # Убедитесь, что это правильная папка
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 7: Send email with Cypress HTML report and link to deployed page
+      # Step 8: Send email with Cypress report and link to deployed page
       - name: Send email with Cypress report
         uses: dawidd6/action-send-mail@v3
         with:
@@ -59,8 +65,8 @@ jobs:
           server_port: 587
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          to: yurkasedow0@gmail.com  # Ваш email
-          from: ${{ secrets.MAIL_USERNAME }}  # Используем MAIL_USERNAME для отправителя
+          to: yurkasedow0@gmail.com
+          from: ${{ secrets.MAIL_USERNAME }}
           subject: 'Cypress Test Report'
           body: |
             <html>
@@ -69,7 +75,7 @@ jobs:
                 <p>The test results are attached in the report.</p>
                 <p>You can also view the test results online at: <a href="https://avngrss.github.io/automationexercise/">GitHub Pages Report</a></p>
               </body>
-            </html>         
+            </html>
           content_type: text/html
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
