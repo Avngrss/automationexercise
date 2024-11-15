@@ -47,10 +47,10 @@ jobs:
           cat cypress/results/final-report.html
 
       - name: Read Mochawesome HTML report
-          id: read-report
-          run: |
           REPORT_CONTENT=$(cat cypress/results/final-report.html)
-          echo "::set-output name=report_content::$REPORT_CONTENT"
+          echo "REPORT_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$REPORT_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       # Step 6: Send email with Cypress HTML report
       - name: Send email with Cypress report
@@ -71,7 +71,7 @@ jobs:
                     <h2>Cypress Test Report</h2>
                     <p>The test results are embedded below:</p>
                     <div>
-                      ${{ steps.read-report.outputs.report_content }}
+                      ${{ env.REPORT_CONTENT }}
                     </div>
                   </body>
                 </html>
