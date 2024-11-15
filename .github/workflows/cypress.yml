@@ -60,8 +60,8 @@ jobs:
               </body>
             </html>
           attachments: |
-            cypress/results/final-report.html  # HTML отчет
-            cypress/results/assets/*           # Все файлы из папки assets
+            cypress/results/final-report.html  
+            cypress/results/assets/*          
           content_type: text/html
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
