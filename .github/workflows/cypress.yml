@@ -46,6 +46,10 @@ jobs:
           ls -l cypress/results/
           cat cypress/results/final-report.html
 
+        name: Archive Mochawesome report and assets
+        run: |
+          tar -czf mochawesome-report.tar.gz cypress/results/final-report.html cypress/results/assets/
+
       # Step 6: Send email with Cypress HTML report
       - name: Send email with Cypress report
         uses: dawidd6/action-send-mail@v3
@@ -61,8 +65,8 @@ jobs:
             <h2>Cypress Test Report</h2>
             <p>The test results are attached in the report.</p>
           attachments: |
-            cypress/results/final-report.html
-            content_type: text/html
+            mochawesome-report.tar.gz
+            content_type: application/gzip
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
