@@ -46,9 +46,12 @@ jobs:
           ls -l cypress/results/
           cat cypress/results/final-report.html
 
+      - name: Install 7zip
+        run: sudo apt-get install p7zip-full
+
       - name: Archive Mochawesome report and assets
         run: |
-          zip -r mochawesome-report.zip cypress/results/final-report.html cypress/results/assets/
+         7z a mochawesome-report.zipx cypress/results/final-report.html cypress/results/assets/
 
       # Step 6: Send email with Cypress HTML report
       - name: Send email with Cypress report
@@ -65,8 +68,7 @@ jobs:
             <h2>Cypress Test Report</h2>
             <p>The test results are attached in the report.</p>
           attachments: |
-            mochawesome-report.zip
-            content_type: application/zip
+            mochawesome-report.zipx
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
