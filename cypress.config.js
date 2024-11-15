@@ -3,7 +3,7 @@ const mochawesomeReportGenerator = require('mochawesome-report-generator');
 const { defineConfig } = require('cypress');
 
 const fs = require('fs');
-const path = require('path');  // Это нужно для работы с путями
+const path = require('path');
 const https = require('https');
 const http = require('http');
 
