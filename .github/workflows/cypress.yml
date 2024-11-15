@@ -41,12 +41,6 @@ jobs:
           name: cypress-results
           path: cypress/results/
 
-      # Step 6: Check if report exists
-      - name: Check if report exists
-        run: |
-          ls -l cypress/results/
-          cat cypress/results/final-report.html
-
       # Step 7: Send email with Cypress HTML report
       - name: Send email with Cypress report
         uses: dawidd6/action-send-mail@v3
