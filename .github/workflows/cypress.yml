@@ -47,7 +47,7 @@ jobs:
           cat cypress/results/final-report.html
 
       - name: Install 7zip
-        run: sudo apt-get install p7zip-full
+        run: brew install p7zip
 
       - name: Archive Mochawesome report and assets
         run: |
