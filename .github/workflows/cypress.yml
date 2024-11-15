@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           to: yurkasedow0@gmail.com  # Ваш email
-          from: ${{ secrets.MAIL_USERNAME }}
+          from: ${{ secrets.MAIL_USERNAME }}  # Используем MAIL_USERNAME для отправителя
           subject: 'Cypress Test Report'
           body: |
             <h2>Cypress Test Report</h2>
