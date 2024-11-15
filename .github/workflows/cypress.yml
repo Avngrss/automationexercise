@@ -3,51 +3,55 @@ name: CI/CD Pipeline (macOS)
 on:
   push:
     branches:
-      - master
+      - master  # или другой основной branch
   pull_request:
     branches:
-      - master
+      - master  # или другой основной branch
 
 jobs:
   test:
     runs-on: macos-latest
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 1: Set up Node.js
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '20'
 
-      # Step 2: Install dependencies
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 3: Run Cypress tests and generate report
+      # Step 4: Run Cypress tests and generate report
       - name: Run Cypress tests and generate report
         run: |
           npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/results
         env:
           CI: true
 
-      # Step 4: Upload Cypress test results as artifact (optional)
+      # Step 5: Upload Cypress test results as artifact (optional)
       - name: Upload Cypress test results as artifact
         uses: actions/upload-artifact@v3
         with:
           name: cypress-results
           path: cypress/results/
 
-      # Step 5: Check if report exists
-      - name: Check if report exists
-        run: |
-          ls -l cypress/results/
-          cat cypress/results/final-report.html
+      # Step 6: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages  # Можно выбрать ветку для публикации, например gh-pages
+          folder: cypress/results  # Папка с результатами тестов
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 6: Send email with Cypress HTML report and assets
-      - name: Send email with Cypress report and assets
+      # Step 7: Send email with Cypress HTML report and link to deployed page
+      - name: Send email with Cypress report
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -62,17 +66,13 @@ jobs:
               <body>
                 <h2>Cypress Test Report</h2>
                 <p>The test results are attached in the report.</p>
+                <p>You can also view the test results online at: <a href="https://${{ github.repository }}.github.io/avngrss/">GitHub Pages Report</a>
               </body>
             </html>
           attachments: |
-            cypress/results/final-report.html  # HTML отчет
-            ${{ steps.files.outputs.files }}
+            cypress/results/final-report.html  
+            cypress/results/assets/          
+          content_type: text/html
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-
-      - name: Get list of all files in assets directory
-        id: files
-        run: |
-          files=$(find cypress/results/assets -type f)
-          echo "files=$files" >> $GITHUB_ENV
