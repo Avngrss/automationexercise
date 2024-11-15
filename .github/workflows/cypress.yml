@@ -34,9 +34,29 @@ jobs:
         env:
           CI: true
 
-      # Step 5: Upload Cypress test results as an artifact (optional)
+      # Step 5: Upload Cypress test results as artifact (optional)
       - name: Upload Cypress test results as artifact
         uses: actions/upload-artifact@v3
         with:
           name: cypress-results
           path: cypress/results/
+
+      # Step 6: Send email with Cypress HTML report
+      - name: Send email with Cypress report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          to: yurkasedow0@gmail.com  # Ваш email
+          from: ${{ secrets.MAIL_USERNAME }}
+          subject: 'Cypress Test Report'
+          body: |
+            <h2>Cypress Test Report</h2>
+            <p>The test results are attached in the report.</p>
+          attachments: |
+            cypress/results/final-report.html  # Путь к вашему отчету
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
