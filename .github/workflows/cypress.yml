@@ -46,7 +46,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: cypress/results
+          folder: docs  # Папка, в которой будут размещены отчеты
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
