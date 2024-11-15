@@ -67,12 +67,9 @@ jobs:
               <body>
                 <h2>Cypress Test Report</h2>
                 <p>The test results are attached in the report.</p>
-                <p>You can also view the test results online at: <a href="https://${{ github.repository }}.github.io/avngrss/">GitHub Pages Report</a>
+                <p>You can also view the test results online at: <a href="https://avngrss.github.io/automationexercise/">GitHub Pages Report</a></p>
               </body>
-            </html>
-          attachments: |
-            cypress/results/final-report.html  
-            cypress/results/assets/*          
+            </html>         
           content_type: text/html
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
