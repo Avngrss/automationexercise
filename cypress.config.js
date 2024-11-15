@@ -65,7 +65,7 @@ module.exports = defineConfig({
     reportDir: 'cypress/results',          // Папка для сохранения отчетов
     overwrite: true,                       // Перезаписывать отчеты
     html: true,                            // Генерация HTML отчетов
-    json: false,                          // Не генерировать JSON файлы
+    json: true,                          // Не генерировать JSON файлы
     timestamp: 'yyyy-mm-dd HH:MM:ss',      // Формат для timestamp в именах файлов
   },
 });

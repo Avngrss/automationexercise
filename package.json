@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "open": "cypress open",
-    "test": "cypress run --reporter mochawesome --reporter-options reportDir=cypress/results,.jsons",
+    "test": "cypress run --reporter mochawesome --reporter-options reportDir=cypress/results/.jsons",
     "generate-report": "mochawesome-merge cypress/results/.jsons/*.json > cypress/results/all-tests.json && mochawesome-report-generator cypress/results/all-tests.json --reportDir cypress/results --reportFilename final-report.html",
     "test-and-generate-report": "npm run test && npm run generate-report"
   },
