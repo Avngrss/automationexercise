@@ -27,10 +27,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run Cypress tests
-      - name: Run Cypress tests
+      # Step 4: Run Cypress tests and generate report
+      - name: Run Cypress tests and generate report
         run: |
-          npx cypress run
+          npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/results
         env:
           CI: true
 
@@ -41,19 +41,13 @@ jobs:
           name: cypress-results
           path: cypress/results/
 
+      # Step 6: Check if report exists
       - name: Check if report exists
         run: |
           ls -l cypress/results/
           cat cypress/results/final-report.html
 
-      - name: Install 7zip
-        run: brew install p7zip
-
-      - name: Archive Mochawesome report and assets
-        run: |
-         7z a mochawesome-report.zipx cypress/results/final-report.html cypress/results/assets/
-
-      # Step 6: Send email with Cypress HTML report
+      # Step 7: Send email with Cypress HTML report
       - name: Send email with Cypress report
         uses: dawidd6/action-send-mail@v3
         with:
@@ -65,10 +59,16 @@ jobs:
           from: ${{ secrets.MAIL_USERNAME }}  # Используем MAIL_USERNAME для отправителя
           subject: 'Cypress Test Report'
           body: |
-            <h2>Cypress Test Report</h2>
-            <p>The test results are attached in the report.</p>
+            <html>
+              <body>
+                <h2>Cypress Test Report</h2>
+                <p>The test results are attached in the report.</p>
+              </body>
+            </html>
           attachments: |
-            mochawesome-report.zipx
+            cypress/results/final-report.html  # HTML отчет
+            cypress/results/assets/*           # Все файлы из папки assets
+          content_type: text/html
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
