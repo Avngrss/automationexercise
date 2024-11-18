@@ -47,7 +47,7 @@ jobs:
           mkdir -p gh-pages
           # Copy files while excluding .jsons and all-tests.json
           rsync -av --exclude='.jsons/' --exclude='all-tests.json' ./cypress/results/ ./gh-pages/
-
+          mv ./gh-pages/final-report.html ./gh-pages/index.html
       # Step 7: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
