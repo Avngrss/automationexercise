@@ -41,15 +41,15 @@ jobs:
           name: cypress-results
           path: cypress/results/
 
-      # Step 6: Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
+      # Step 6: Prepare files for GitHub Pages (copying files, excluding unwanted files)
+      - name: Prepare files for GitHub Pages
         run: |
           mkdir -p gh-pages
-          # Копируем все файлы из cypress/results в gh-pages
-          cp -r ./cypress/results/* ./gh-pages/
-          # Удаляем нежелательные файлы
-          rm -rf ./gh-pages/.jsons/
-          rm -rf ./gh-pages/all-tests.json
+          # Copy files while excluding .jsons and all-tests.json
+          rsync -av --exclude='.jsons/' --exclude='all-tests.json' ./cypress/results/ ./gh-pages/
+
+      # Step 7: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
@@ -57,7 +57,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 7: Send email with Cypress report and link to deployed page
+      # Step 8: Send email with Cypress report and link to deployed page
       - name: Send email with Cypress report
         uses: dawidd6/action-send-mail@v3
         with:
