@@ -1,0 +1,106 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2024-11-18T08:55:43.646Z",
+    "end": "2024-11-18T08:55:47.522Z",
+    "duration": 3876,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "569ae876-76c8-4191-9022-a92fb09159a1",
+      "title": "",
+      "fullFile": "cypress/e2e/RemoveProduct.cy.js",
+      "file": "cypress/e2e/RemoveProduct.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "0b17ab3c-0f92-41e2-b362-f9e1a7347c1d",
+          "title": "Remove products",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Remove Products from Cart",
+              "fullTitle": "Remove products Remove Products from Cart",
+              "timedOut": null,
+              "duration": 2281,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('https://automationexercise.com/');\ncy.get('.logo').should('be.visible');\ncy.get('.nav.navbar-nav').should('be.visible');\ncy.get('.single-products').first().trigger('mouseover');\ncy.get('a.btn.btn-default.add-to-cart').first().should('be.visible').click();\ncy.get('button.btn.btn-success.close-modal.btn-block').click();\ncy.get('a').contains('Cart').click({\n  force: true\n});\ncy.get('.active').should('be.visible').contains('Shopping Cart');\ncy.get('.cart_quantity_delete').click();\ncy.contains('empty');",
+              "err": {},
+              "uuid": "7c681977-44cf-4884-a6da-a09cafcb05ff",
+              "parentUUID": "0b17ab3c-0f92-41e2-b362-f9e1a7347c1d",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "7c681977-44cf-4884-a6da-a09cafcb05ff"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 2281,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/results/.jsons",
+        "overwrite": true,
+        "html": true,
+        "json": true,
+        "timestamp": "yyyy-mm-dd HH:MM:ss"
+      },
+      "version": "6.2.0"
+    }
+  }
+}
