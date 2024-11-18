@@ -43,10 +43,17 @@ jobs:
 
       # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
+        run: |
+          mkdir -p gh-pages
+          # Копируем все файлы из cypress/results в gh-pages
+          cp -r ./cypress/results/* ./gh-pages/
+          # Удаляем нежелательные файлы
+          rm -rf ./gh-pages/.jsons/
+          rm -rf ./gh-pages/all-tests.json
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: cypress/results  # Укажите папку, где находятся отчеты (или другую директорию, если нужно)
+          folder: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
